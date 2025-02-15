@@ -1,4 +1,4 @@
-import { Key, useState } from "react";
+import { Key, useEffect, useState } from "react";
 import {
   format,
   subMonths,
@@ -11,26 +11,20 @@ import {
   lastDayOfWeek,
   getWeek,
 } from "date-fns";
+import DayCell from "./DayCell";
+import CalHeader from "./CalHeader";
+import { current } from "@reduxjs/toolkit";
 
 type WeekyPlannerProps = {
   showDetailsHandle: (dayStr: string) => void,
-  setRecipes: string[]
+  setDayIndex: (idx: number) => void,
 }
 
 
-const WeekPlanner = ({showDetailsHandle, setRecipes}: WeekyPlannerProps) => {
-    const [currentMonth, setCurrentMonth] = useState(new Date())
+const WeekPlanner = ({showDetailsHandle, setDayIndex}: WeekyPlannerProps) => {
+    const [currentMonth, setCurrentMonth] = useState(new Date());
     const [currentWeek, setCurrentWeek] = useState(getWeek(currentMonth));
     const [selectedDate, setSelectedDate] = useState(new Date());
-
-    const changeMonthHandler = (btnType: string) => {
-      if (btnType === "prev") {
-        setCurrentMonth(subMonths(currentMonth, 1));
-      }
-      if (btnType === "next") {
-        setCurrentMonth(addMonths(currentMonth, 1));
-      }
-    };
 
     const changeWeekHandler = (btnType: string) => {
       if (btnType === "prev") {
@@ -43,29 +37,10 @@ const WeekPlanner = ({showDetailsHandle, setRecipes}: WeekyPlannerProps) => {
       }
     }
 
-    const onDateClickHandle = (day: Date, dayStr: string) => {
+    const onDateClickHandle = (day: Date, dayStr: string, idx: number) => {
       setSelectedDate(day);
       showDetailsHandle(dayStr);
-    };
-
-    const renderHeader = () => {
-      const dateFormat = "MMM yyyy";
-      // console.log("selected day", selectedDate);
-      return (
-        <div className="header row flex-middle">
-            <div className="col col-start">
-              {/* <div className="icon" onClick={() => changeMonthHandler("next")}>next month</div> */}
-
-            <div className="col col-center">
-              <span>{format(currentMonth, dateFormat)}</span>
-            </div>
-            <div className="col col-end">
-              {/* <div className="icon" onClick={() => changeMonthHandler("next")}>next month</div> */}
-            </div>
-        </div>
-        </div>
-        
-      );
+      setDayIndex(idx)
     };
 
     const renderDays = () => {
@@ -83,56 +58,14 @@ const WeekPlanner = ({showDetailsHandle, setRecipes}: WeekyPlannerProps) => {
       return <div className="days row">{days}</div>;
     }
 
-    const renderCells = () => {
-      const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
-      const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 1 });
-      const dateFormat = "d";
-      const rows = [];
-      let days = [];
-      let day = startDate;
-      let formattedDate = "";
+    let dates = [];
 
-      while (day <= endDate) {
-        for (let i = 0; i < 7; i++) {
-          formattedDate = format(day, dateFormat);
-          const cloneDay = day;
-          days.push(
-            <div
-              className={`col cell ${
-                isSameDay(day, new Date())
-                  ? "today"
-                  : isSameDay(day, selectedDate)
-                  ? "selected"
-                  : ""
-              }`}
-              key={day as unknown as Key}
-            onClick={() => {
-              const dayStr = format(cloneDay, "ccc dd MMM yy");
-              onDateClickHandle(cloneDay, dayStr);
-            }}>
-              <span className="number">{formattedDate}</span>
-              <span className="bg">{formattedDate}</span>
-              
-              <span className="recipe">{
-                setRecipes[i] != ""
-                  ? setRecipes[i]
-                  : "No Recipe"
-              } </span>
-              <p></p>
-            </div>
-          );
-        day = addDays(day, 1);
-        }
+    let currentDay = startOfWeek(currentMonth, { weekStartsOn: 1 });
+    for (let i = 0; i < 7; i++) {
+      dates[i] = currentDay;
+      currentDay = addDays(currentDay, 1);
+    }
 
-        rows.push(
-          <div className="row" key={day as unknown as Key}>
-            {days}
-          </div>
-        );
-        days = [];
-      }
-      return <div className="body">{rows}</div>;
-    };
 
   const renderFooter = () => {
     return (
@@ -150,12 +83,24 @@ const WeekPlanner = ({showDetailsHandle, setRecipes}: WeekyPlannerProps) => {
     );
   };
 
+  // Format all my strings
+  const headerFormat = "MMM yyyy";
+  let formattedHeader = format(currentMonth, headerFormat);     
+
+
 
   return (
     <div className="calendar">
-      {renderHeader()}
+      <CalHeader data={formattedHeader} ></CalHeader>
       {renderDays()}
-      {renderCells()}
+      <div className="row">
+        {dates.map((date, index) => {
+          console.log("day is", date)
+          return (<DayCell currentDate={date} selectedDate={selectedDate} displayIndex={index} onDateClickHandle={onDateClickHandle}></DayCell>)
+        })}
+      </div>
+
+
       {renderFooter()}
     </div>
   );

@@ -91,7 +91,6 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 100%;
   }
   
   .row-middle {
@@ -165,7 +164,7 @@
     border-bottom: 1px solid var(--border-color);
   }
   
-  .calendar .body .cell {
+  .calendar .cell {
     position: relative;
     height: 4em;
     border-right: 1px solid var(--border-color);
@@ -176,22 +175,22 @@
     font-size: 1.5em;
   }
   
-  .calendar .body .cell:hover {
+  .calendar .cell:hover {
     background: var(--bg-color);
     transition: 0.5s ease-out;
   }
   
-  .calendar .body .selected {
+  .calendar .selected {
     border-left: 10px solid transparent;
     border-image: linear-gradient(45deg, #1a8fff 0%, #53cbf1 40%);
     border-image-slice: 1;
   }
-  .calendar .body .today {
+  .calendar .today {
     border-left: 10px solid transparent;
     border-image: linear-gradient(45deg, #ff1a79 0%, #eb82b3 40%);
     border-image-slice: 1;
   }
-  .calendar .body .row {
+  .calendar .row {
     border-bottom: 1px solid var(--border-color);
   }
   
@@ -199,11 +198,11 @@
     border-bottom: none;
   } */
   
-  .calendar .body .cell:last-child {
+  .calendar .cell:last-child {
     border-right: none;
   }
   
-  .calendar .body .cell .number {
+  .calendar .cell .number {
     position: absolute;
     font-size: 82.5%;
     line-height: 1;
@@ -212,7 +211,7 @@
     font-weight: 700;
   }
 
-  .calendar .body .cell .recipe {
+  .calendar .cell .recipe {
     position: relative;
     font-size: 60%;
     line-height: 1;
@@ -225,7 +224,7 @@
     pointer-events: none;
   }
   
-  .calendar .body .cell .bg {
+  .calendar .cell .bg {
     font-weight: 700;
     line-height: 1;
     color: var(--main-color);
@@ -238,17 +237,17 @@
     letter-spacing: -0.07em;
   }
   
-  .calendar .body .cell:hover .bg,
-  .calendar .body .selected .bg {
+  .calendar .cell:hover .bg,
+  .calendar .selected .bg {
     opacity: 0.05;
     transition: 0.5s ease-in;
   }
-  .calendar .body .cell.today .bg {
+  .calendar .cell.today .bg {
     color: #ff1a79;
     opacity: 0.05;
   }
   
-  .calendar .body .col {
+  .calendar .col {
     flex-grow: 0;
     flex-basis: calc(100% / 7);
     width: calc(100% / 7);
