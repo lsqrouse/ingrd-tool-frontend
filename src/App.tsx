@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import "./styles.css";
 import WeekDisplay from './cal/WeekDisplay.tsx'
-import DayDetails from "./cal/DayDetails.tsx";
 import RecipeCardList from './recipes/RecipeCardList.tsx';
 import { useSelector } from 'react-redux'
 import { ScheduledRecipe } from './types.tsx';
@@ -14,10 +13,7 @@ function App() {
   const [weekdays, setWeekdays] = useState<Array<ScheduledRecipe>>([]);
   const currentWeekStart = useSelector((state: any) => state.currentWeekStart.value);
 
-
-  // responsible for updating all data that flows downstream
-  useEffect(() => {
-    setLoading(true);
+  const fetchDataFromBackend = useCallback(async () => {
 
     // first get recipeDefinitions
     fetch("http://localhost:8080/api/recipeDef", {
@@ -54,8 +50,12 @@ function App() {
           //update this somehow
           setWeekdays(data);
       })
+  }, [])
 
-  }, []);
+  // responsible for updating all data that flows downstream
+  useEffect(() => {
+    fetchDataFromBackend()
+  }, [fetchDataFromBackend]);
 
 
   
@@ -71,8 +71,15 @@ function App() {
         <h2>Example</h2>
         <WeekDisplay weekdays={weekdays}/>
         <br />
-        <DayDetails/>
-        <RecipeCardList recipes={recipes}></RecipeCardList>
+        <div className='row'>
+          <div className = 'col'> 
+            <RecipeCardList recipes={recipes} updateDataFunc={fetchDataFromBackend}></RecipeCardList>
+            <button> Add New Recipe </button>
+          </div>
+          <div className='col'>
+             Ingredient List! 
+          </div>
+        </div>
       </div>
 
     </div>

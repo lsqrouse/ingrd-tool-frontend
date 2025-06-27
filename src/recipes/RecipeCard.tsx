@@ -5,11 +5,12 @@ import { updateSelectedDate } from '../slicers/selectedDate';
 
 type RecipeCardProps = {
     recipeData: RecipeDef;
+    updateFunc: () => void;
 };
 
 
 // displays informatio for a single recipe. Also includes functionality to schedule that recipe on the selected day
-function RecipeCard({ recipeData}: RecipeCardProps) {
+function RecipeCard({ recipeData, updateFunc}: RecipeCardProps) {
     const selectedDate = useSelector((state: any) => state.selectedDate.value)
     const dispatch = useDispatch();
 
@@ -32,7 +33,7 @@ function RecipeCard({ recipeData}: RecipeCardProps) {
         ))
         // TODO need to reload the UI to pick up this change. Since we're not updating state here, it doesn;t matter if the backend is updated
         console.log("Updating selectedDate!")
-        dispatch(updateSelectedDate(selectedDate));
+        updateFunc()
     }    
     
     return (

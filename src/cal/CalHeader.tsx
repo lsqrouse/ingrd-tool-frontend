@@ -1,22 +1,22 @@
 export interface Props {
-    data: string;
+  header: string;
 }
 
-const CalHeader = (props: Props) => {
-      return (
-        <div className="header row flex-middle">
-            <div className="col col-start">
-              {/* <div className="icon" onClick={() => changeMonthHandler("next")}>next month</div> */}
-
-            <div className="col col-center">
-              <span>{props.data}</span>
-            </div>
-            <div className="col col-end">
-              {/* <div className="icon" onClick={() => changeMonthHandler("next")}>next month</div> */}
-            </div>
+const CalHeader = ({header}: Props) => {
+  console.log("Header is ", header)
+  return (
+    <div className="header row flex-middle">
+        <div className="col col-start">
+          <div className="icon">next month</div>
         </div>
-        </div>     
-      );
+        <div className="col col-center">
+          <span>{header}</span>
+        </div>
+        <div className="col col-end">
+          <div className="icon">next month</div>
+        </div>
+    </div>
+  );
 }
 
 export default CalHeader;

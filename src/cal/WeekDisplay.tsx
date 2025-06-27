@@ -72,7 +72,7 @@ const WeekDisplay = ({weekdays}: Props) => {
 
   return (
     <div className="calendar">
-      <CalHeader data={formattedHeader} ></CalHeader>
+      <CalHeader header={formattedHeader} ></CalHeader>
       {renderDays()}
       <div className="row">
         {weekdays.map((date, index) => {
