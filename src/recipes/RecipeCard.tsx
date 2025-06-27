@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { RecipeDef } from "../types"
-import { updateSelectedDate } from '../slicers/selectedDate';
 
 
 type RecipeCardProps = {

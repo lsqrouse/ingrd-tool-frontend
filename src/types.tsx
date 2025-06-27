@@ -4,6 +4,14 @@ export type IngredientDef = {
     ttl: string
 }
 
+export type Ingredient = {
+    id: number,
+    ingredientDef: IngredientDef,
+    expirationDate: Date,
+    quantity: number
+}
+
+
 export type RecipeIngredient = {
     id: number,
     quantity: number,
@@ -26,4 +34,5 @@ export type ScheduledRecipe = {
     scheduledDate: Date
     recipeDef: RecipeDef
 }
+
 

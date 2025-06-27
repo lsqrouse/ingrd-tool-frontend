@@ -3,7 +3,8 @@ import "./styles.css";
 import WeekDisplay from './cal/WeekDisplay.tsx'
 import RecipeCardList from './recipes/RecipeCardList.tsx';
 import { useSelector } from 'react-redux'
-import { ScheduledRecipe } from './types.tsx';
+import { Ingredient, ScheduledRecipe } from './types.tsx';
+import IngredientList from './ingredients/IngredientList.tsx';
 
 
 
@@ -11,6 +12,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);
   const [weekdays, setWeekdays] = useState<Array<ScheduledRecipe>>([]);
+  const [ingredients, setIngredients] = useState<Array<Ingredient>>([]);
   const currentWeekStart = useSelector((state: any) => state.currentWeekStart.value);
 
   const fetchDataFromBackend = useCallback(async () => {
@@ -50,6 +52,30 @@ function App() {
           //update this somehow
           setWeekdays(data);
       })
+
+
+      // Gets scheduled recipes for the week
+    fetch(`http://localhost:8080/api/storedIngredients`, {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      
+      credentials: "include", // Needed if using cookies/authentication
+      })
+      .then((response) => {
+        console.log("ingredient resoponse is ", response)
+          // when response is not found, stil make sure to update scheduledRecipe to null so that we display "No Recipe"
+          if (response.status == 404) {
+              return null
+          }
+          return response.json();
+      })
+      .then((data) => {
+          //update this somehow
+          setIngredients(data);
+      })
+
   }, [])
 
   // responsible for updating all data that flows downstream
@@ -77,7 +103,7 @@ function App() {
             <button> Add New Recipe </button>
           </div>
           <div className='col'>
-             Ingredient List! 
+             <IngredientList ingredients={ingredients} updateDataFunc={fetchDataFromBackend}></IngredientList>
           </div>
         </div>
       </div>
