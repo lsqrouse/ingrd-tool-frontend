@@ -1,28 +1,25 @@
 import { useState, useEffect } from 'react'
 import "./styles.css";
-import WeekPlanner from './cal/WeekPlanner'
+import WeekDisplay from './cal/WeekDisplay.tsx'
 import DayDetails from "./cal/DayDetails.tsx";
-import RecipeCardList from './RecipeCardList.tsx';
-import { useSelector, useDispatch } from 'react-redux'
+import RecipeCardList from './recipes/RecipeCardList.tsx';
+import { useSelector } from 'react-redux'
+import { ScheduledRecipe } from './types.tsx';
+
 
 
 function App() {
-  const [showDetails, setShowDetails] = useState(false);
-  const [selectedDateIdx, setSelectedDateIdx] = useState(-1);
-  const [data, setData] = useState("");
   const [loading, setLoading] = useState(false);
   const [recipes, setRecipes] = useState([]);
+  const [weekdays, setWeekdays] = useState<Array<ScheduledRecipe>>([]);
+  const currentWeekStart = useSelector((state: any) => state.currentWeekStart.value);
 
-  const weeklyRecipeList = useSelector((state: any) => state.weekRecipeList.value)
 
-  const showDetailsHandle = (dayStr: string) => {
-    setData(dayStr);
-    setShowDetails(true);
-  };
-
+  // responsible for updating all data that flows downstream
   useEffect(() => {
     setLoading(true);
 
+    // first get recipeDefinitions
     fetch("http://localhost:8080/api/recipeDef", {
       method: "GET",
       headers: {
@@ -35,6 +32,29 @@ function App() {
       setRecipes(data)
       setLoading(false)
     })
+
+    // Gets scheduled recipes for the week
+    fetch(`http://localhost:8080/api/weekRecipes?startDate=${currentWeekStart.toISOString()}`, {
+      method: "GET",
+      headers: {
+          "Content-Type": "application/json",
+      },
+      
+      credentials: "include", // Needed if using cookies/authentication
+      })
+      .then((response) => {
+        console.log("week recipe resoponse is ", response)
+          // when response is not found, stil make sure to update scheduledRecipe to null so that we display "No Recipe"
+          if (response.status == 404) {
+              return null
+          }
+          return response.json();
+      })
+      .then((data) => {
+          //update this somehow
+          setWeekdays(data);
+      })
+
   }, []);
 
 
@@ -49,10 +69,10 @@ function App() {
         <h1>Week View Calendar with react</h1>
         <br />
         <h2>Example</h2>
-        <WeekPlanner showDetailsHandle={showDetailsHandle} recipeList={weeklyRecipeList} setDayIndex={setSelectedDateIdx} />
+        <WeekDisplay weekdays={weekdays}/>
         <br />
-        {showDetails && <DayDetails data={data} />}
-        <RecipeCardList recipes={recipes} selectedDateIdx={selectedDateIdx}></RecipeCardList>
+        <DayDetails/>
+        <RecipeCardList recipes={recipes}></RecipeCardList>
       </div>
 
     </div>

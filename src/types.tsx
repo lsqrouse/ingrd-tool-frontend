@@ -22,4 +22,8 @@ export type RecipeDay = {
     scheduledRecipe: string
 }
 
+export type ScheduledRecipe = {
+    scheduledDate: Date
+    recipeDef: RecipeDef
+}
 

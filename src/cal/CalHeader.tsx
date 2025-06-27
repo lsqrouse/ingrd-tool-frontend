@@ -3,7 +3,6 @@ export interface Props {
 }
 
 const CalHeader = (props: Props) => {
-      // console.log("selected day", selectedDate);
       return (
         <div className="header row flex-middle">
             <div className="col col-start">

@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import weekRecipeListReducer from './slicers/recipeList'
-import recipeList from './slicers/recipeList'
+import selectedDateReducer from './slicers/selectedDate'
+import currentWeekStartReducer from './slicers/currentWeekStart'
 
 export default configureStore({
     reducer: {
-        weekRecipeList: weekRecipeListReducer,
+        selectedDate: selectedDateReducer,
+        currentWeekStart: currentWeekStartReducer
+        
     },
 })
