@@ -14,6 +14,10 @@ function RecipeCard({ recipeData, updateFunc}: RecipeCardProps) {
     const dispatch = useDispatch();
 
     const handleScheduleRecipe = () => {
+        if (selectedDate == null) {
+            console.log("No Date Currently Selected!")
+            return;
+        }
         console.log("Querying Backend to schedule recipe on ", selectedDate)
         fetch(`http://localhost:8080/api/scheduledRecipes`, {
         method: "POST",
@@ -27,12 +31,11 @@ function RecipeCard({ recipeData, updateFunc}: RecipeCardProps) {
         
         credentials: "include", // Needed if using cookies/authentication
         })
-        .then((response) => console.log(
-            "response to save was ", response
-        ))
-        // TODO need to reload the UI to pick up this change. Since we're not updating state here, it doesn;t matter if the backend is updated
-        console.log("Updating selectedDate!")
-        updateFunc()
+        .then((response) => {
+            console.log("Calling update function")
+            updateFunc()
+        })
+        
     }    
     
     return (

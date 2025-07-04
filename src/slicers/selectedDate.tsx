@@ -8,8 +8,9 @@ export const selectedDate = createSlice({
   },
   reducers: {
     updateSelectedDate: (state, action) => {
-        state.value = action.payload
-        console.log("Updated state!")
+      console.log("Updated selected date from ", state.value, "to", action.payload )
+
+      state.value = action.payload
     },
   },
 })

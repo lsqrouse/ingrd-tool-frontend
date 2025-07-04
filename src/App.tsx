@@ -16,7 +16,7 @@ function App() {
   const currentWeekStart = useSelector((state: any) => state.currentWeekStart.value);
 
   const fetchDataFromBackend = useCallback(async () => {
-
+    console.log("Getting updated data from backend!")
     // first get recipeDefinitions
     fetch("http://localhost:8080/api/recipeDef", {
       method: "GET",
@@ -41,7 +41,6 @@ function App() {
       credentials: "include", // Needed if using cookies/authentication
       })
       .then((response) => {
-        console.log("week recipe resoponse is ", response)
           // when response is not found, stil make sure to update scheduledRecipe to null so that we display "No Recipe"
           if (response.status == 404) {
               return null
@@ -49,7 +48,6 @@ function App() {
           return response.json();
       })
       .then((data) => {
-          //update this somehow
           setWeekdays(data);
       })
 
@@ -64,7 +62,6 @@ function App() {
       credentials: "include", // Needed if using cookies/authentication
       })
       .then((response) => {
-        console.log("ingredient resoponse is ", response)
           // when response is not found, stil make sure to update scheduledRecipe to null so that we display "No Recipe"
           if (response.status == 404) {
               return null
@@ -76,12 +73,12 @@ function App() {
           setIngredients(data);
       })
 
-  }, [])
+  }, [currentWeekStart])
 
   // responsible for updating all data that flows downstream
   useEffect(() => {
     fetchDataFromBackend()
-  }, [fetchDataFromBackend]);
+  }, []);
 
 
   

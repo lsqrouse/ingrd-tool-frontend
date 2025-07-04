@@ -7,8 +7,8 @@ const parseCurrentStart = () => {
   today = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate()) 
-  
+    today.getDate())
+    
     return startOfWeek(today)
 }
 export const currentWeekStart = createSlice({

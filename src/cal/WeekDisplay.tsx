@@ -3,32 +3,29 @@ import {
   format,
   subWeeks,
   addWeeks,
-  startOfWeek,
+  getMonth,
   addDays,
   getWeek,
 } from "date-fns";
 import DayCell from "./DayCell";
 import CalHeader from "./CalHeader";
 import { ScheduledRecipe } from "../types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { updateCurrentWeekStart } from "../slicers/currentWeekStart";
 
 export interface Props {
   weekdays: Array<ScheduledRecipe>
 }
 const WeekDisplay = ({weekdays}: Props) => {
   const currentWeekStart = useSelector((state: any) => state.currentWeekStart.value);
-  const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [currentWeek, setCurrentWeek] = useState(getWeek(currentMonth));
-
+  const dispatch = useDispatch();
 
   const changeWeekHandler = (btnType: string) => {
     if (btnType === "prev") {
-      setCurrentMonth(subWeeks(currentMonth, 1));
-      setCurrentWeek(getWeek(subWeeks(currentMonth, 1)));
+      dispatch(updateCurrentWeekStart(addDays(currentWeekStart, -7)))
     }
     if (btnType === "next") {
-      setCurrentMonth(addWeeks(currentMonth, 1));
-      setCurrentWeek(getWeek(addWeeks(currentMonth, 1)));
+      dispatch(updateCurrentWeekStart(addDays(currentWeekStart, 7)))
     }
   }
 
@@ -56,7 +53,6 @@ const WeekDisplay = ({weekdays}: Props) => {
             prev week
           </div>
         </div>
-        <div>{currentWeek}</div>
         <div className="col col-end" onClick={() => changeWeekHandler("next")}>
           <div className="icon">next week</div>
         </div>
@@ -66,10 +62,7 @@ const WeekDisplay = ({weekdays}: Props) => {
 
   // Format all my strings
   const headerFormat = "MMM yyyy";
-  let formattedHeader = format(currentMonth, headerFormat);     
-
-
-
+  let formattedHeader = format(currentWeekStart, headerFormat);     
   return (
     <div className="calendar">
       <CalHeader header={formattedHeader} ></CalHeader>

@@ -3,7 +3,6 @@ export interface Props {
 }
 
 const CalHeader = ({header}: Props) => {
-  console.log("Header is ", header)
   return (
     <div className="header row flex-middle">
         <div className="col col-start">

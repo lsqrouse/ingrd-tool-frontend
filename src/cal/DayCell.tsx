@@ -1,6 +1,7 @@
 import {
     format,
-    isSameDay
+    isSameDay,
+    addDays
 } from "date-fns";
 import { Key } from "react";
 import { useSelector, useDispatch } from 'react-redux'
@@ -19,7 +20,7 @@ const DayCell = ({scheduledRecipe}: Props) => {
     const dispatch = useDispatch();
 
     const dateFormat = "d";
-    let formattedDate = format(currentDate, dateFormat);
+    let formattedDate = format(addDays(currentDate, 1), dateFormat);
 
     return <div
         //add selected class when current and selected dates match
